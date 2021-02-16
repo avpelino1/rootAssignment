@@ -8,9 +8,6 @@ import java.util.TreeSet;
 
 public class RootAssignmentApplication {
 
-    //keep track of our driver objects, so we can print them in the report later
-    private List<Driver> allDrivers = new ArrayList<Driver>();
-
     //this method is the main: the program starts here
     public static void main(String[] args) throws FileNotFoundException {
 	    RootAssignmentApplication raa = new RootAssignmentApplication();
@@ -19,17 +16,19 @@ public class RootAssignmentApplication {
 
     //input file and follow commands, then generate report
 	public void run() throws FileNotFoundException {
+        List<Driver> allDrivers = new ArrayList<Driver>();
         File inputFile = new File("C:\\Users\\avpel\\workspace\\root-assignment\\Input.txt");
         try (Scanner inputScanner = new Scanner(inputFile)){
             while (inputScanner.hasNextLine()) {
                 String command = inputScanner.nextLine();
                 String[] info = command.split(" ");
                 if (command.contains("Driver")) {
-                    executeDriverCommand(info);
+                    Driver driver = executeDriverCommand(info);
+                    allDrivers.add(driver);
                 } else if (command.contains("Trip")) {
-                    executeTripCommand(info);
+                    allDrivers= executeTripCommand(info, allDrivers);
                 } else {
-                    System.out.println("ERROR: unknown command");
+                    System.out.println("Command Error.");
                 }
             }
         } catch (Exception e){
@@ -37,20 +36,18 @@ public class RootAssignmentApplication {
             e.printStackTrace();
         }
 
-        TreeSet<Integer>sortedMiles = sortDriversByMiles();
-        generateOutput(sortedMiles);
-
+        TreeSet<Integer>sortedMiles = sortDriversByMiles(allDrivers);
+        generateOutput(sortedMiles, allDrivers);
     }
 
 	//create a driver object + add it to the list
-	public void executeDriverCommand(String[] info){
+	public Driver executeDriverCommand(String[] info){
         String name = info[1];
-        Driver driver = new Driver(name);
-        allDrivers.add(driver);
+        return new Driver(name);
     }
 
     //log trip information and store it in the driver object
-    public void executeTripCommand(String[] info){
+    public List<Driver> executeTripCommand(String[] info, List<Driver>allDrivers){
         String name = info[1];
         String startTime = info[2];
         String endTime = info[3];
@@ -78,6 +75,7 @@ public class RootAssignmentApplication {
                 }
             }
         }
+        return allDrivers;
     }
 
     public int findAvgSpeed(String startTime, String endTime, double milesDriven){
@@ -102,7 +100,7 @@ public class RootAssignmentApplication {
         return (int)milesPerHour;
     }
 
-    public TreeSet<Integer> sortDriversByMiles(){
+    public TreeSet<Integer> sortDriversByMiles(List<Driver> allDrivers){
         TreeSet<Integer> miles = new TreeSet<Integer>();
         for(Driver currentDriver: allDrivers){
             miles.add(currentDriver.getTotalMiles());
@@ -111,7 +109,7 @@ public class RootAssignmentApplication {
     }
 
     //generate output file based on the driver objects
-    public void generateOutput(TreeSet<Integer>sortedMiles){
+    public void generateOutput(TreeSet<Integer>sortedMiles, List<Driver> allDrivers){
         List<Driver> previouslyReported = new ArrayList<Driver>();
         for(Integer driversMiles:sortedMiles){
             for(Driver currentDriver:allDrivers){
