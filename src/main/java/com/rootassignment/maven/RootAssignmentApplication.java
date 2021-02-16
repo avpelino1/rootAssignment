@@ -1,12 +1,10 @@
 package com.rootassignment.maven;
-
-import org.springframework.boot.SpringApplication;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.TreeSet;
 
 public class RootAssignmentApplication {
 
@@ -34,14 +32,13 @@ public class RootAssignmentApplication {
                     System.out.println("ERROR: unknown command");
                 }
             }
-            inputScanner.close();
-            System.out.println(allDrivers.toString());
         } catch (Exception e){
             System.out.println("No file found.");
             e.printStackTrace();
         }
 
-        printReportFile();
+        TreeSet<Integer>sortedMiles = sortDriversByMiles();
+        generateOutput(sortedMiles);
 
     }
 
@@ -52,6 +49,7 @@ public class RootAssignmentApplication {
         allDrivers.add(driver);
     }
 
+    //log trip information and store it in the driver object
     public void executeTripCommand(String[] info){
         String name = info[1];
         String startTime = info[2];
@@ -77,7 +75,6 @@ public class RootAssignmentApplication {
                     }
                     int totalAvgSpeed = i/allTripSpeeds.size();
                     currentDriver.setAvgSpeed(totalAvgSpeed);
-                    currentDriver.toString();
                 }
             }
         }
@@ -102,12 +99,29 @@ public class RootAssignmentApplication {
         double totalHours = totalMins/60;
 
         double milesPerHour = milesDriven/totalHours;
-        int avgSpeed = (int)milesPerHour;
-
-        return avgSpeed;
+        return (int)milesPerHour;
     }
 
-    public void printReportFile(){
+    public TreeSet<Integer> sortDriversByMiles(){
+        TreeSet<Integer> miles = new TreeSet<Integer>();
+        for(Driver currentDriver: allDrivers){
+            miles.add(currentDriver.getTotalMiles());
+        }
+        return (TreeSet<Integer>)miles.descendingSet();
+    }
+
+    //generate output file based on the driver objects
+    public void generateOutput(TreeSet<Integer>sortedMiles){
+        List<Driver> previouslyReported = new ArrayList<Driver>();
+        for(Integer driversMiles:sortedMiles){
+            for(Driver currentDriver:allDrivers){
+                if(currentDriver.getTotalMiles()==driversMiles&& !previouslyReported.contains(currentDriver)){
+                    currentDriver.print();
+                    previouslyReported.add(currentDriver);
+                }
+            }
+
+        }
 
     }
 

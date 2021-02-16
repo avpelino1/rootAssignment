@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class Driver {
 
-    private String name;
-    private int totalMiles;
+    private final String name;
+    private Integer totalMiles;
     private ArrayList<Integer> tripSpeeds = new ArrayList<>();
     private int avgSpeed;
 
@@ -34,20 +34,15 @@ public class Driver {
         this.tripSpeeds = tripSpeeds;
     }
 
-    public int getAvgSpeed() {
-        return avgSpeed;
-    }
-
     public void setAvgSpeed(int avgSpeed) {
         this.avgSpeed = avgSpeed;
     }
 
-    @Override
-    public String toString() {
-        return "Driver{" +
-                "name='" + name + '\'' +
-                ", totalMiles=" + totalMiles +
-                ", avgSpeed=" + avgSpeed +
-                '}';
+    public void print() {
+        if(this.totalMiles==0){
+            System.out.println(name+": "+totalMiles+" miles");
+        } else {
+            System.out.println(name + ": " + totalMiles + " miles @ " + avgSpeed + " mph");
+        }
     }
 }
