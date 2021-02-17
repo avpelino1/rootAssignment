@@ -45,4 +45,13 @@ public class Driver {
             System.out.println(name + ": " + totalMiles + " miles @ " + avgSpeed + " mph");
         }
     }
+
+    @Override
+    public String toString() {
+        if(this.totalMiles==0){
+            return(name+": "+totalMiles+" miles");
+        } else {
+            return(name + ": " + totalMiles + " miles @ " + avgSpeed + " mph");
+        }
+    }
 }

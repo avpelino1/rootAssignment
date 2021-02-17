@@ -1,36 +1,34 @@
 package com.rootassignment.maven;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.TreeSet;
+import java.util.*;
 
-public class RootAssignmentApplication {
+public class RootAssignment {
 
-    //this method is the main: the program starts here
-    public static void main(String[] args) throws IOException {
-        if(args.length < 1) {
-            System.out.println("Error, usage: java ClassName inputfile");
-            System.exit(1);
-        }
-        File file = new File (args[0]);
-	    RootAssignmentApplication raa = new RootAssignmentApplication();
-		raa.run(file);
-	}
+    public static void main(String[] args) {
+//        if(args.length < 1) {
+//            System.out.println("Error, usage: java RootAssignment.java inputfile");
+//            System.exit(1);
+//        }
+//        File file = new File("Input.txt");
 
-    //input file and follow commands, then generate report
-	public void run(File file) throws FileNotFoundException {
+        Scanner scanner = new Scanner(System.in);
+        String fileName = scanner.next();
+        File file = new File(fileName);
+        scanner.close();
+        RootAssignment ra = new RootAssignment();
+        ra.run(file);
+    }
+
+	public void run(File file) {
         List<Driver> allDrivers = new ArrayList<Driver>();
         try (Scanner inputScanner = new Scanner(file)){
             while (inputScanner.hasNextLine()) {
                 String command = inputScanner.nextLine();
                 String[] info = command.split(" ");
                 if (command.contains("Driver")) {
-                    Driver driver = executeDriverCommand(info);
-                    allDrivers.add(driver);
+                    allDrivers = executeDriverCommand(info, allDrivers);
                 } else if (command.contains("Trip")) {
                     allDrivers= executeTripCommand(info, allDrivers);
                 } else {
@@ -42,14 +40,16 @@ public class RootAssignmentApplication {
             e.printStackTrace();
         }
 
-        TreeSet<Integer>sortedMiles = sortDriversByMiles(allDrivers);
-        generateOutput(sortedMiles, allDrivers);
+        List<Driver>sortedDrivers = sortDriversByMiles(allDrivers);
+        generateOutput(sortedDrivers);
     }
 
 	//create a driver object + add it to the list
-	public Driver executeDriverCommand(String[] info){
+	public List<Driver> executeDriverCommand(String[] info, List<Driver> allDrivers){
         String name = info[1];
-        return new Driver(name);
+        Driver driver = new Driver(name);
+        allDrivers.add(driver);
+        return allDrivers;
     }
 
     //log trip information and store it in the driver object
@@ -61,13 +61,13 @@ public class RootAssignmentApplication {
 
         int avgSpeed = findAvgSpeed(startTime, endTime, milesDriven);
         if(avgSpeed>5 && avgSpeed<100){
-            int roundedMilesDriven = (int) milesDriven;
             for (Driver currentDriver: allDrivers){
                 String currentDriverName = currentDriver.getName();
 
                 if(currentDriverName.equals(name)){
-                    int driverMiles = currentDriver.getTotalMiles() + roundedMilesDriven;
-                    currentDriver.setTotalMiles(driverMiles);
+                    double driverMiles = currentDriver.getTotalMiles() + milesDriven;
+                    int totalMiles = (int)driverMiles;
+                    currentDriver.setTotalMiles(totalMiles);
 
                     ArrayList<Integer> allTripSpeeds = currentDriver.getTripSpeeds();
                     allTripSpeeds.add(avgSpeed);
@@ -106,27 +106,44 @@ public class RootAssignmentApplication {
         return (int)milesPerHour;
     }
 
-    public TreeSet<Integer> sortDriversByMiles(List<Driver> allDrivers){
-        TreeSet<Integer> miles = new TreeSet<Integer>();
+    public List<Driver> sortDriversByMiles(List<Driver> allDrivers){
+        List<Integer> allMiles = new ArrayList<Integer>();
         for(Driver currentDriver: allDrivers){
-            miles.add(currentDriver.getTotalMiles());
+            allMiles.add(currentDriver.getTotalMiles());
         }
-        return (TreeSet<Integer>)miles.descendingSet();
+        Collections.sort(allMiles);
+        Collections.reverse(allMiles);
+
+        List<Driver> sortedDrivers = new ArrayList<Driver>();
+
+        for(Integer currentInt: allMiles){
+            for(Driver currentDriver: allDrivers){
+                if(currentDriver.getTotalMiles()==currentInt && !sortedDrivers.contains(currentDriver)){
+                    sortedDrivers.add(currentDriver);
+                }
+            }
+        }
+        return sortedDrivers;
     }
 
     //generate output file based on the driver objects
-    public void generateOutput(TreeSet<Integer>sortedMiles, List<Driver> allDrivers){
+    public void generateOutput(List<Driver> sortedDrivers){
         List<Driver> previouslyReported = new ArrayList<Driver>();
-        for(Integer driversMiles:sortedMiles){
-            for(Driver currentDriver:allDrivers){
-                if(currentDriver.getTotalMiles()==driversMiles&& !previouslyReported.contains(currentDriver)){
-                    currentDriver.print();
+        File report = new File("Report.txt");
+        String info;
+        try {
+            FileWriter writer = new FileWriter(report);
+            for(Driver currentDriver:sortedDrivers){
+                if(!previouslyReported.contains(currentDriver)){
+                    info = currentDriver.toString();
+                    writer.write(info + "\n");
                     previouslyReported.add(currentDriver);
                 }
             }
-
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
     }
 
 }
