@@ -1,6 +1,8 @@
 package com.rootassignment.maven;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -9,16 +11,20 @@ import java.util.TreeSet;
 public class RootAssignmentApplication {
 
     //this method is the main: the program starts here
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws IOException {
+        if(args.length < 1) {
+            System.out.println("Error, usage: java ClassName inputfile");
+            System.exit(1);
+        }
+        File file = new File (args[0]);
 	    RootAssignmentApplication raa = new RootAssignmentApplication();
-		raa.run();
+		raa.run(file);
 	}
 
     //input file and follow commands, then generate report
-	public void run() throws FileNotFoundException {
+	public void run(File file) throws FileNotFoundException {
         List<Driver> allDrivers = new ArrayList<Driver>();
-        File inputFile = new File("C:\\Users\\avpel\\workspace\\root-assignment\\Input.txt");
-        try (Scanner inputScanner = new Scanner(inputFile)){
+        try (Scanner inputScanner = new Scanner(file)){
             while (inputScanner.hasNextLine()) {
                 String command = inputScanner.nextLine();
                 String[] info = command.split(" ");
