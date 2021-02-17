@@ -40,8 +40,8 @@ public class RootAssignment {
             e.printStackTrace();
         }
 
-        List<Driver>sortedDrivers = sortDriversByMiles(allDrivers);
-        generateOutput(sortedDrivers);
+        allDrivers = sortDriversByMiles(allDrivers);
+        generateOutput(allDrivers);
     }
 
 	//create a driver object + add it to the list
