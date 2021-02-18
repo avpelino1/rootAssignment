@@ -4,25 +4,27 @@ RootAssignment: Driver Tracking
     this application utilizes OOP and unit testing to ensure a smooth process.
 
 Installation:
-    --Run this application from your cmd line (java RootAssignment.java)
-    --When prompted, enter the name of your Input file into the console.
+    --Please add your Input file to the package (There is a placeholder named Input.txt)
+    --When prompted, enter the name of your input file into the console.
 
 Usage:
-    --Imports an input file from the cmd line.
+    --Imports an input file via stdin.
     --Command "Driver" creates a driver object and adds it to a list of Drivers.
-    --Command "Trip" finds average speed and updates corresponding driver's total miles and total average speed (mph).
-    --Creates an output file "Report" which lists drivers and their statistics in descending order of miles driven.
+    --Command "Trip" finds average speed and updates the corresponding driver's
+    total miles and total average speed (mph).
+    --Creates an output file "Report" which lists drivers and their statistics in
+    descending order of miles driven.
 
 Thought Process:
     When this application takes in a Driver Command, it creates a Driver Object.
     This was chosen because it allows the application to keep track of each Driver
     and their corresponding variables (name, total miles, average speed, etc).
-    Each Driver object is added to an ArrayList, which is accessed and edited
-    numerous times as the application processes new information from the input file.
+    Each Driver object is added to an ArrayList, which is passed to various other
+    methods as the application processes new commands.
 
-    When the application takes in a Trip Command, the corresponding driver object
-    is updated appropriately. This ensures that we maintain the list of drivers
-    and their variables.
+    When the application takes in a Trip Command, the corresponding driver object is
+    updated appropriately. This driver object is found by looping through the list of
+    all Drivers until the driver Name variable matches the name tied to the trip.
 
     Once every command is processed, the list of all Drivers is sorted
     in descending order of total miles driven. This sorted list is used to generate

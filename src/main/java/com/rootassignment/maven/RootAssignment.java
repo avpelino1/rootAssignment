@@ -7,16 +7,10 @@ import java.util.*;
 public class RootAssignment {
 
     public static void main(String[] args) {
-//        if(args.length < 1) {
-//            System.out.println("Error, usage: java RootAssignment.java inputfile");
-//            System.exit(1);
-//        }
-//        File file = new File("Input.txt");
-
         Scanner scanner = new Scanner(System.in);
-        String fileName = scanner.next();
+        System.out.println("Please enter the name of the input file: (e.g. Input.txt)");
+        String fileName = scanner.nextLine();
         File file = new File(fileName);
-        scanner.close();
         RootAssignment ra = new RootAssignment();
         ra.run(file);
     }
@@ -39,7 +33,6 @@ public class RootAssignment {
             System.out.println("No file found.");
             e.printStackTrace();
         }
-
         allDrivers = sortDriversByMiles(allDrivers);
         generateOutput(allDrivers);
     }
@@ -57,51 +50,48 @@ public class RootAssignment {
         String endTime = info[3];
         double milesDriven = Double.parseDouble(info[4]);
 
-        int avgSpeed = findAvgSpeed(startTime, endTime, milesDriven);
+        double avgSpeed = findAvgSpeed(startTime, endTime, milesDriven);
         if(avgSpeed>5 && avgSpeed<100){
             for (Driver currentDriver: allDrivers){
                 String currentDriverName = currentDriver.getName();
 
                 if(currentDriverName.equals(name)){
                     double driverMiles = currentDriver.getTotalMiles() + milesDriven;
-                    int totalMiles = (int)driverMiles;
+                    int totalMiles = (int) Math.round(driverMiles);
                     currentDriver.setTotalMiles(totalMiles);
 
-                    ArrayList<Integer> allTripSpeeds = currentDriver.getTripSpeeds();
+                    ArrayList<Double> allTripSpeeds = currentDriver.getTripSpeeds();
                     allTripSpeeds.add(avgSpeed);
                     currentDriver.setTripSpeeds(allTripSpeeds);
                     int i=0;
-                    for(int tripSpeed : allTripSpeeds){
+                    for(double tripSpeed : allTripSpeeds){
                         i+=tripSpeed;
                     }
-                    int totalAvgSpeed = i/allTripSpeeds.size();
-                    currentDriver.setAvgSpeed(totalAvgSpeed);
+                    double size = allTripSpeeds.size();
+                    double totalAvgSpeed = i/size;
+                    System.out.println(totalAvgSpeed);
+                    currentDriver.setAvgSpeed(0);
                 }
             }
         }
         return allDrivers;
     }
 
-    public int findAvgSpeed(String startTime, String endTime, double milesDriven){
-        String[] startSplit = startTime.split(":");
-        String startHoursString = startSplit[0];
-        String startMinsString = startSplit[1];
-        int startHours = Integer.parseInt(startHoursString)*60;
-        int startMins = Integer.parseInt(startMinsString);
-        int startTotalMins = startHours+startMins;
-
-        String[] endSplit = endTime.split(":");
-        String endHoursString = endSplit[0];
-        String endMinsString = endSplit[1];
-        int endHours = Integer.parseInt(endHoursString)*60;
-        int endMins = Integer.parseInt(endMinsString);
-        int endTotalMins = endHours+endMins;
-
+    public double findAvgSpeed(String startTime, String endTime, double milesDriven){
+        int startTotalMins = determineTimeElapsed(startTime);
+        int endTotalMins = determineTimeElapsed(endTime);
         double totalMins = endTotalMins - startTotalMins;
         double totalHours = totalMins/60;
+        return milesDriven/totalHours;
+    }
 
-        double milesPerHour = milesDriven/totalHours;
-        return (int)milesPerHour;
+    public int determineTimeElapsed(String time){
+        String[] timeSplit = time.split(":");
+        String hoursString = timeSplit[0];
+        String minsString = timeSplit[1];
+        int startHours = Integer.parseInt(hoursString)*60;
+        int startMins = Integer.parseInt(minsString);
+        return startHours+startMins;
     }
 
     public List<Driver> sortDriversByMiles(List<Driver> allDrivers){

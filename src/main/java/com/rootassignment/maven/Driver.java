@@ -6,7 +6,7 @@ public class Driver {
 
     private final String name;
     private Integer totalMiles;
-    private ArrayList<Integer> tripSpeeds = new ArrayList<>();
+    private ArrayList<Double> tripSpeeds = new ArrayList<>();
     private int avgSpeed;
 
     public Driver(String name){
@@ -26,24 +26,16 @@ public class Driver {
         this.totalMiles = totalMiles;
     }
 
-    public ArrayList<Integer> getTripSpeeds() {
+    public ArrayList<Double> getTripSpeeds() {
         return tripSpeeds;
     }
 
-    public void setTripSpeeds(ArrayList<Integer> tripSpeeds) {
+    public void setTripSpeeds(ArrayList<Double> tripSpeeds) {
         this.tripSpeeds = tripSpeeds;
     }
 
     public void setAvgSpeed(int avgSpeed) {
         this.avgSpeed = avgSpeed;
-    }
-
-    public void print() {
-        if(this.totalMiles==0){
-            System.out.println(name+": "+totalMiles+" miles");
-        } else {
-            System.out.println(name + ": " + totalMiles + " miles @ " + avgSpeed + " mph");
-        }
     }
 
     @Override
