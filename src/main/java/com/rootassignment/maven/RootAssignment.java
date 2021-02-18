@@ -44,7 +44,6 @@ public class RootAssignment {
         generateOutput(allDrivers);
     }
 
-	//create a driver object + add it to the list
 	public List<Driver> executeDriverCommand(String[] info, List<Driver> allDrivers){
         String name = info[1];
         Driver driver = new Driver(name);
@@ -52,7 +51,6 @@ public class RootAssignment {
         return allDrivers;
     }
 
-    //log trip information and store it in the driver object
     public List<Driver> executeTripCommand(String[] info, List<Driver>allDrivers){
         String name = info[1];
         String startTime = info[2];
@@ -126,7 +124,6 @@ public class RootAssignment {
         return sortedDrivers;
     }
 
-    //generate output file based on the driver objects
     public void generateOutput(List<Driver> sortedDrivers){
         List<Driver> previouslyReported = new ArrayList<Driver>();
         File report = new File("Report.txt");

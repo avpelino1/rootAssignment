@@ -1,7 +1,7 @@
 RootAssignment: Driver Tracking
     This application is designed to follow commands from an input file,
     and use that information to generate an output file. Written in java,
-    this application utilizes OOP and unit tests to ensure a smooth process.
+    this application utilizes OOP and unit testing to ensure a smooth process.
 
 Installation:
     --Run this application from your cmd line (java RootAssignment.java)
@@ -24,9 +24,9 @@ Thought Process:
     is updated appropriately. This ensures that we maintain the list of drivers
     and their variables.
 
-    Once all the commands are processed, the list of all Drivers is sorted
+    Once every command is processed, the list of all Drivers is sorted
     in descending order of total miles driven. This sorted list is used to generate
-    the output file, which contains all the information from each Driver object.
+    the output file, which displays all the information from each Driver object.
 
     Finally, this application makes use of unit testing to ensure that all methods
     are working correctly. This method of testing was chosen because if the application
