@@ -49,12 +49,10 @@ public class RootAssignment {
         String startTime = info[2];
         String endTime = info[3];
         double milesDriven = Double.parseDouble(info[4]);
-
         double avgSpeed = findAvgSpeed(startTime, endTime, milesDriven);
         if(avgSpeed>5 && avgSpeed<100){
             for (Driver currentDriver: allDrivers){
                 String currentDriverName = currentDriver.getName();
-
                 if(currentDriverName.equals(name)){
                     double driverMiles = currentDriver.getTotalMiles() + milesDriven;
                     int totalMiles = (int) Math.round(driverMiles);
@@ -63,14 +61,14 @@ public class RootAssignment {
                     ArrayList<Double> allTripSpeeds = currentDriver.getTripSpeeds();
                     allTripSpeeds.add(avgSpeed);
                     currentDriver.setTripSpeeds(allTripSpeeds);
+
                     int i=0;
                     for(double tripSpeed : allTripSpeeds){
                         i+=tripSpeed;
                     }
                     double size = allTripSpeeds.size();
-                    double totalAvgSpeed = i/size;
-                    System.out.println(totalAvgSpeed);
-                    currentDriver.setAvgSpeed(0);
+                    int totalAvgSpeed = (int) Math.round(i/size);
+                    currentDriver.setAvgSpeed(totalAvgSpeed);
                 }
             }
         }
@@ -101,9 +99,7 @@ public class RootAssignment {
         }
         Collections.sort(allMiles);
         Collections.reverse(allMiles);
-
         List<Driver> sortedDrivers = new ArrayList<Driver>();
-
         for(Integer currentInt: allMiles){
             for(Driver currentDriver: allDrivers){
                 if(currentDriver.getTotalMiles()==currentInt && !sortedDrivers.contains(currentDriver)){
@@ -132,5 +128,4 @@ public class RootAssignment {
             e.printStackTrace();
         }
     }
-
 }

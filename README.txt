@@ -4,7 +4,7 @@ RootAssignment: Driver Tracking
     this application utilizes OOP and unit testing to ensure a smooth process.
 
 Installation:
-    --Please add your Input file to the package (There is a placeholder named Input.txt)
+    --Please add your Input file to the directory (There is a placeholder named Input.txt)
     --When prompted, enter the name of your input file into the console.
 
 Usage:
